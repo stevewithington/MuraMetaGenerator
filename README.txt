@@ -17,7 +17,7 @@ HOW DOES THIS WORK?
 If you already have a Description and/or Keywords entered via the 'Meta Data' tab when adding and/or editing an existing page, then the values entered there will be used. Otherwise, the MuraMetaGenerator™ will analyze the page title, and primary content of the page to automatically generate unique keywords and a description.
 Why Should I Use This?
 
-There could be a number of reasons why someone would want to use MuraMetaGenerator™. One of the best reasons is that most Authors and Editors either don't have the time and/or the knowledge of what information to put in these fields to begin with.
+There could be a number of reasons why someone would want to use MuraMetaGenerator. One of the best reasons is that most Authors and Editors either don't have the time and/or the knowledge of what information to put in these fields to begin with.
 
 Also, since search engines change their algorithms daily and actually rely less and less on meta keywords and meta descriptions, why not spend your time going through the actual content of your pages and making sure your content contains the information you want indexed by search engines? After all, MuraMetaGenerator™ derives its information based on the actual page content which means you'll be following 'White Hat' Search Engine Optimization (SEO) techniques so your search engines rankings will most likely grow organically over time.
 
