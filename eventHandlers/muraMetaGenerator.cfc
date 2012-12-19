@@ -1,14 +1,14 @@
-<!---
-
-This file is part of MuraMetaGenerator TM
-(c) Stephen J. Withington, Jr. | www.stephenwithington.com
-
-CAREFULLY READ THE ENCLOSED LICENSE AGREEMENT (plugin/license.htm). BY USING THIS SOFTWARE, YOU ARE CONSENTING TO BE BOUND BY AND ARE BECOMING A PARTY TO THIS AGREEMENT. IF YOU DO NOT AGREE TO ALL OF THE TERMS OF THIS AGREEMENT, THEN DO NOT USE THIS SOFTWARE, AND, IF APPLICABLE, RETURN THIS PRODUCT TO THE PLACE OF PURCHASE FOR A FULL REFUND.
-
-Notes:
-		2010.10.11 - sjw - added edits by Maurice Crama: stripTagContent() to remove any embedded js- style-tags from the rendered content. also including setDynamicContent() to render any embedded [mura] tags.
-
---->
+<cfscript>
+/**
+* 
+* This file is part of MuraMetaGenerator TM
+*
+* Copyright 2010-2012 Stephen J. Withington, Jr.
+* Licensed under the Apache License, Version v2.0
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+*/
+</cfscript>
 <cfcomponent extends="mura.plugin.pluginGenericEventHandler">
 
 	<cfscript>

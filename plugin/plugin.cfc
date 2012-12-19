@@ -1,11 +1,14 @@
-<!---
-
-This file is part of MuraMetaGenerator TM
-(c) Stephen J. Withington, Jr. | www.stephenwithington.com
-
-CAREFULLY READ THE ENCLOSED LICENSE AGREEMENT (plugin/license.htm). BY USING THIS SOFTWARE, YOU ARE CONSENTING TO BE BOUND BY AND ARE BECOMING A PARTY TO THIS AGREEMENT. IF YOU DO NOT AGREE TO ALL OF THE TERMS OF THIS AGREEMENT, THEN DO NOT USE THIS SOFTWARE, AND, IF APPLICABLE, RETURN THIS PRODUCT TO THE PLACE OF PURCHASE FOR A FULL REFUND.
-
---->
+<cfscript>
+/**
+* 
+* This file is part of MuraMetaGenerator TM
+*
+* Copyright 2010-2012 Stephen J. Withington, Jr.
+* Licensed under the Apache License, Version v2.0
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+*/
+</cfscript>
 <cfcomponent output="false" extends="mura.plugin.plugincfc">
 
 	<cfscript>
