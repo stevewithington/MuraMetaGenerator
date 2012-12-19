@@ -17,9 +17,9 @@
 Author: <a href="http://stephenwithington.com" target="_blank">Steve Withington</a></em></p>
 
 <h3>End User License Agreement (EULA)</h3>
-<p><em><a href="plugin/license.htm" target="_blank">View Printer-Friendly Version &gt;</a></em></p>
+<p><em><a href="license.txt" target="_blank">View Printer-Friendly Version &gt;</a></em></p>
 <div class="notice">
-<p><textarea readonly="readonly" name="EULA" id="EULA" label="End User License Agreement (EULA)" cols="97" rows="10"><cfinclude template="plugin/license.txt" /></textarea></p>
+<p><textarea readonly="readonly" name="EULA" id="EULA" label="End User License Agreement (EULA)" cols="97" rows="10"><cfinclude template="license.txt" /></textarea></p>
 </div>
 
 <h3>How Do I Use This?</h3>
