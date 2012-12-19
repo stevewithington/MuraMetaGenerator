@@ -1,6 +1,6 @@
 #MuraMetaGenerator
 
-##HOW DO I USE THIS?
+##How Do I Use This?
 On the plugin's Settings page, make sure you select the site(s) you wish to have your Meta Keywords and Meta Descriptions auto-generated.
 
 Also, in the 'Meta Keywords to Ignore' TextArea, enter a comma-separated list of keywords you do NOT wish to include in your listing of keywords. A generic listing of keywords has been entered with words such as 'a,an,and,the' and so forth. If you wish to index these common words (even though search engines usually ignore them anyway), then simply leave this field blank.
@@ -8,11 +8,12 @@ Also, in the 'Meta Keywords to Ignore' TextArea, enter a comma-separated list of
 Most Mura installations use a file located at /{siteID}/includes/themes/{themeName, i.e., 'merced'}/templates/inc/html_head.cfm. In this file, by default the following lines of code are typcially found:
 
 ```<meta name="description" content="#HTMLEditFormat(renderer.getmetadesc())#" />
-<meta name="keywords" content="#HTMLEditFormat(renderer.getmetakeywords())#" />```
+<meta name="keywords" content="#HTMLEditFormat(renderer.getmetakeywords())#" />
+```
 
 You can either leave these lines of code in place or simply remove them if using this plugin.
 
-##HOW DOES THIS WORK?
+##How Does This Work?
 If you already have a Description and/or Keywords entered via the 'Meta Data' tab when adding and/or editing an existing page, then the values entered there will be used. Otherwise, the MuraMetaGenerator™ will analyze the page title, and primary content of the page to automatically generate unique keywords and a description.
 Why Should I Use This?
 
