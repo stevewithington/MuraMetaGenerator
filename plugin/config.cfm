@@ -8,15 +8,23 @@
 * http://www.apache.org/licenses/LICENSE-2.0
 *
 */
-</cfscript>
-<cfif not structKeyExists(request,"pluginConfig")>
-	<cfset pluginID=listLast(listGetat(getDirectoryFromPath(getCurrentTemplatePath()),listLen(getDirectoryFromPath(getCurrentTemplatePath()),application.configBean.getFileDelim())-1,application.configBean.getFileDelim()),"_")>
-	<cfset request.pluginConfig=application.pluginManager.getConfig(pluginID)>
-	<cfset request.pluginConfig.setSetting("pluginMode","Admin")/>
-</cfif>
+if ( !IsDefined('$') ) {
 
-<cfif request.pluginConfig.getSetting("pluginMode") eq "Admin" and not isUserInRole('S2')>
-	<cfif not structKeyExists(session,"siteID") or not application.permUtility.getModulePerm(request.pluginConfig.getValue('moduleID'),session.siteid)>
-		<cflocation url="#application.configBean.getContext()#/admin/" addtoken="false" />
-	</cfif>
-</cfif></cfsilent>
+	$ = application.serviceFactory.getBean('$');
+
+	if ( StructKeyExists(session, 'siteid') ) {
+		$.init(session.siteid);
+	} else {
+		$.init('default');
+	};
+
+};
+
+if ( !IsDefined('pluginConfig') ) {
+	pluginConfig = $.getBean('pluginManager').getConfig('MuraMetaGenerator');
+};
+
+if ( !$.currentUser().isSuperUser() ) {
+	location( url='#$.globalConfig('context')#/admin/', addtoken=false );
+};
+</cfscript></cfsilent>

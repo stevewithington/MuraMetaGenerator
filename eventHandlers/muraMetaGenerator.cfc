@@ -1,14 +1,10 @@
-<cfscript>
-/**
-* 
-* This file is part of MuraMetaGenerator TM
-*
-* Copyright 2010-2012 Stephen J. Withington, Jr.
-* Licensed under the Apache License, Version v2.0
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-*/
-</cfscript>
+<!---
+	This file is part of MuraMetaGenerator TM
+
+	Copyright 2010-2012 Stephen J. Withington, Jr.
+	Licensed under the Apache License, Version v2.0
+	http://www.apache.org/licenses/LICENSE-2.0
+--->
 <cfcomponent extends="mura.plugin.pluginGenericEventHandler">
 
 	<cfscript>
@@ -108,8 +104,8 @@
 			
 			// META DESCRIPTION
 			setMetaDesc();
-			local.oldMetaDesc = '<meta name="description" content="#HTMLEditFormat(getEvent().getContentRenderer().getMetaDesc())#" />';
-			local.newMetaDesc = '<meta name="description" content="#getMetaDesc()#" />';
+			local.oldMetaDesc = '<meta name="description" content="#HTMLEditFormat(getEvent().getContentRenderer().getMetaDesc())#">';
+			local.newMetaDesc = '<meta name="description" content="#getMetaDesc()#">';
 			local.newResponse = ReplaceNoCase(getEvent().getValue('__MuraResponse__'), local.oldMetaDesc, local.newMetaDesc);
 			if ( not FindNoCase(local.newMetaDesc, local.newResponse) ) {
 				local.newResponse = ReplaceNoCase(getEvent().getValue('__MuraResponse__'), '<head>', '<head>' & local.newMetaDesc);
@@ -118,8 +114,8 @@
 
 			// META KEYWORDS
 			setMetaKeywords();
-			local.oldMetaKeywords = '<meta name="keywords" content="#HTMLEditFormat(getEvent().getContentRenderer().getMetaKeyWords())#" />';
-			local.newMetaKeywords = '<meta name="keywords" content="#getMetaKeywords()#" />';
+			local.oldMetaKeywords = '<meta name="keywords" content="#HTMLEditFormat(getEvent().getContentRenderer().getMetaKeyWords())#">';
+			local.newMetaKeywords = '<meta name="keywords" content="#getMetaKeywords()#">';
 			local.newResponse = ReplaceNoCase(getEvent().getValue('__MuraResponse__'), local.oldMetaKeywords, local.newMetaKeywords);
 			if ( not FindNoCase(local.newMetaKeywords, local.newResponse) ) {
 				local.newResponse = ReplaceNoCase(getEvent().getValue('__MuraResponse__'), '<head>', '<head>' & local.newMetaKeywords);

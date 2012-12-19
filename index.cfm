@@ -13,22 +13,16 @@
 <cfsavecontent variable="body">
 <cfoutput>
 <h2>MuraMetaGenerator&trade;</h2>
-<p><em>Version: #request.pluginConfig.getVersion()#<br />
+<p><em>Version: #pluginConfig.getVersion()#<br />
 Author: <a href="http://stephenwithington.com" target="_blank">Steve Withington</a></em></p>
-
-<h3>End User License Agreement (EULA)</h3>
-<p><em><a href="license.txt" target="_blank">View Printer-Friendly Version &gt;</a></em></p>
-<div class="notice">
-<p><textarea readonly="readonly" name="EULA" id="EULA" label="End User License Agreement (EULA)" cols="97" rows="10"><cfinclude template="license.txt" /></textarea></p>
-</div>
 
 <h3>How Do I Use This?</h3>
 <p>On the plugin's Settings page, make sure you select the site(s) you wish to have your Meta Keywords and Meta Descriptions auto-generated.</p>
 <p>Also, in the 'Meta Keywords to Ignore' TextArea, enter a comma-separated list of keywords you do NOT wish to include in your listing of keywords. A generic listing of keywords has been entered with words such as 'a,an,and,the' and so forth. If you wish to index these common words (even though search engines usually ignore them anyway), then simply leave this field blank.</p>
-<p>Most Mura installations use a file located at <strong>/{siteID}/includes/themes/{themeName, i.e., 'merced'}/templates/inc/html_head.cfm</strong>. In this file, by default the following lines of code are typcially found:</p>
+<p>Most Mura installations use a file located at <strong>/{siteID}/includes/themes/{themeName, e.g., 'merced'}/templates/inc/html_head.cfm</strong>. In this file, by default the following lines of code are typcially found:</p>
 <div class="notice">
-<p> &lt;meta name=&quot;description&quot; content=&quot;##HTMLEditFormat(renderer.getmetadesc())##&quot; /&gt;<br>
-&lt;meta name=&quot;keywords&quot; content=&quot;##HTMLEditFormat(renderer.getmetakeywords())##&quot; /&gt;</p>
+<p> &lt;meta name=&quot;description&quot; content=&quot;##HTMLEditFormat(renderer.getmetadesc())##&quot;&gt;<br>
+&lt;meta name=&quot;keywords&quot; content=&quot;##HTMLEditFormat(renderer.getmetakeywords())##&quot;&gt;</p>
 </div>
 <p>You can either leave these lines of code in place or simply remove them if using this plugin.</p>
 
@@ -47,11 +41,10 @@ Author: <a href="http://stephenwithington.com" target="_blank">Steve Withington<
 	<li>Mura 5.2+</li>
 </ul>
 </div>
-<h3>Need help?</h3>
-<p>Catch me on the <a href="http://www.getmura.com/forum/" target="_blank">Mura CMS forums</a>, contact me through my site at <a href="http://www.stephenwithington.com" target="_blank">www.stephenwithington.com</a>, or via email at steve [at] stephenwithington [dot] com.</p>
-<p>Cheers!</p>
+<h3>Questions / Issues?</h3>
+	<p>Visit the project at <a href="https://github.com/stevewithington/MuraMetaGenerator" target="_blank">https://github.com/stevewithington/MuraMetaGenerator</a></p>
 </cfoutput>
 </cfsavecontent>
 <cfoutput>
-	#application.pluginManager.renderAdminTemplate(body=body,pageTitle=request.pluginConfig.getName())#
+	#application.pluginManager.renderAdminTemplate(body=body,pageTitle=pluginConfig.getName())#
 </cfoutput>

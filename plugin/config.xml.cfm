@@ -8,26 +8,12 @@
 * http://www.apache.org/licenses/LICENSE-2.0
 *
 */
-</cfscript>
-	<cfinclude template="config.cfm" />
-	<cfscript>
-		initialInstallDir = request.pluginConfig.getPluginID();
-		finalInstallDir = request.pluginConfig.getDirectory();
-		if ( finalInstallDir eq initialInstallDir ) {
-			// this is being installed for the 1st time
-			pluginDir = request.pluginConfig.getPluginID();
-		} else {
-			// this is an update and has already been installed before
-			pluginDir = request.pluginConfig.getPackage() & '_' & request.pluginConfig.getPluginID();
-		};
-		linkToEULA = 'http://#getPageContext().getRequest().getServerName()#/plugins/#pluginDir#/plugin/license.htm';
-	</cfscript>
-</cfsilent>
+</cfscript></cfsilent>
 <cfoutput><plugin>
 	<name>MuraMetaGenerator</name>
 	<package>MuraMetaGenerator</package>
 	<directoryFormat>packageOnly</directoryFormat>
-	<version>1.0.3</version>
+	<version>1.0.4</version>
 	<provider>Steve Withington</provider>
 	<providerURL>http://stephenwithington.com</providerURL>
 	<category>Utility</category>
