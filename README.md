@@ -7,7 +7,8 @@ Also, in the 'Meta Keywords to Ignore' TextArea, enter a comma-separated list of
 
 Most Mura installations use a file located at /{siteID}/includes/themes/{themeName, i.e., 'merced'}/templates/inc/html_head.cfm. In this file, by default the following lines of code are typcially found:
 
-```<meta name="description" content="#HTMLEditFormat(renderer.getmetadesc())#" />
+```html
+<meta name="description" content="#HTMLEditFormat(renderer.getmetadesc())#" />
 <meta name="keywords" content="#HTMLEditFormat(renderer.getmetakeywords())#" />
 ```
 
