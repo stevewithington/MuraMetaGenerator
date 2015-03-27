@@ -5,11 +5,11 @@ On the plugin's Settings page, make sure you select the site(s) you wish to have
 
 Also, in the 'Meta Keywords to Ignore' TextArea, enter a comma-separated list of keywords you do NOT wish to include in your listing of keywords. A generic listing of keywords has been entered with words such as 'a,an,and,the' and so forth. If you wish to index these common words (even though search engines usually ignore them anyway), then simply leave this field blank.
 
-Most Mura installations use a file located at /{siteID}/includes/themes/{themeName, i.e., 'merced'}/templates/inc/html_head.cfm. In this file, by default the following lines of code are typcially found:
+Most Mura installations use a file located at /{SiteID}/includes/themes/{ThemeName}/templates/inc/html_head.cfm. In this file, by default the following lines of code are typcially found:
 
 ```html
-<meta name="description" content="#HTMLEditFormat(renderer.getmetadesc())#" />
-<meta name="keywords" content="#HTMLEditFormat(renderer.getmetakeywords())#" />
+<meta name="description" content="#esapiEncode('html_att', $.content('metaDesc'))#" />
+<meta name="keywords" content="#esapiEncode('html_att', $.content('metaKeywords'))#" />
 ```
 
 You can either leave these lines of code in place or simply remove them if using this plugin.

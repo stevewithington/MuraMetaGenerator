@@ -20,176 +20,138 @@ component accessors=true extends='mura.plugin.pluginGenericEventHandler' output=
 		variables.pluginConfig.addEventHandler(this);
 
 		lock scope='application' type='exclusive' timeout=10 {
-			application[variables.settings.package] = new contentRenderer(arguments.$);
+			application[variables.settings.package] = this;
 		}
 
-		set$(arguments.$);
-	}
-
-	public any function onSiteRequestStart(required struct $) {
 		set$(arguments.$);
 	}
 
 	public any function onRenderEnd(required struct $) {
 		set$(arguments.$);
-		doMetaSwitch();
+
+		doMeta();
+	}
+
+	public any function onContentEdit(required struct $) {
+		set$(arguments.$);
+		// update metaDesc & metaKeywords
 	}
 
 
 	// Helpers		******************************************************************
 
+	public any function doMeta(boolean debug=false) {
+		// remove meta keywords and description tags
+		var resp = stripMeta($.event('__MuraResponse__'));
+		var metaDesc = '<meta name="description" content="#esapiEncode('html_attr', getMetaDesc())#" />';
+		var metaKeywords = '<meta name="keywords" content="#esapiEncode('html_attr', getMetaKeywords())#" />';
+
+		resp = ReplaceNoCase(resp, '<head>', '<head>' & metaDesc & metaKeywords);
+
+		$.event('__MuraResponse__', resp);
+		return arguments.debug ? local : true;
+	}
+
+	public any function stripMeta(required string str) {
+		return ReReplaceNoCase(arguments.str, '(?i)<meta name=[''"](description|keywords)[''"].*?>', '', 'all');
+	}
+
 	public any function listDeleteDuplicates(string list='', string delimiter=',', boolean debug=false) {
-		var local = {};
-		local.ret = '';
-		local.i = 0;
+		var i = 0;
+		var ret = '';
+
 		if ( Len(arguments.list) ) {
-			local.arr = ListToArray(arguments.list, arguments.delimiter);
-			for ( local.i=1; local.i <= ArrayLen(local.arr); local.i++ ) {
-				if ( !ListFindNoCase(local.ret, local.arr[local.i], arguments.delimiter) ) {
-					local.ret = ListAppend(local.ret, local.arr[local.i], arguments.delimiter);
+			var arr = ListToArray(arguments.list, arguments.delimiter);
+			for ( i=1; i <= ArrayLen(local.arr); i++ ) {
+				if ( !ListFindNoCase(ret, arr[i], arguments.delimiter) ) {
+					ret = ListAppend(ret, arr[i], arguments.delimiter);
 				}
 			}
 		}
 
-		return arguments.debug ? local : local.ret;
+		return arguments.debug ? local : ret;
 	}
 
 	public any function listDelete(string strToRemove='', string list='', string delimiter=',', boolean debug=false) {
-		var local = {};
-		local.ret = '';
-		local.i = 0;
+		var i = 0;
+		var ret = '';
+
 		if ( Len(arguments.strToRemove) && Len(arguments.list) ) {
-			local.arr = ListToArray(arguments.list, arguments.delimiter);
-			for ( local.i=1; local.i <= ArrayLen(local.arr); local.i++ ) {
-				if ( not ListFindNoCase(arguments.strToRemove, local.arr[local.i], arguments.delimiter) ) {
-					local.ret = ListAppend(local.ret, local.arr[local.i], arguments.delimiter);
+			var arr = ListToArray(arguments.list, arguments.delimiter);
+			for ( i=1; i <= ArrayLen(arr); i++ ) {
+				if ( !ListFindNoCase(arguments.strToRemove, arr[i], arguments.delimiter) ) {
+					ret = ListAppend(ret, arr[i], arguments.delimiter);
 				}
 			}
 		}
 
-		return arguments.debug ? local : local.ret;
-	}
-
-
-	public any function doMetaSwitch(boolean debug=false) {
-		var local = {};	
-		
-		// META DESCRIPTION
-		setMetaDesc();
-		local.oldMetaDesc = '<meta name="description" content="#HTMLEditFormat($.content('metaDesc'))#">';
-
-		local.newMetaDesc = '<meta name="description" content="#getMetaDesc()#">';
-
-		local.newResponse = ReplaceNoCase($.event('__MuraResponse__'), local.oldMetaDesc, local.newMetaDesc);
-
-		if ( not FindNoCase(local.newMetaDesc, local.newResponse) ) {
-			local.newResponse = ReplaceNoCase($.event('__MuraResponse__'), '<head>', '<head>' & local.newMetaDesc);
-		}
-
-		$.event('__MuraResponse__', local.newResponse);
-
-		// META KEYWORDS
-		setMetaKeywords();
-
-		local.oldMetaKeywords = '<meta name="keywords" content="#HTMLEditFormat($.content('metaKeywords'))#">';
-
-		local.newMetaKeywords = '<meta name="keywords" content="#getMetaKeywords()#">';
-
-		local.newResponse = ReplaceNoCase($.event('__MuraResponse__'), local.oldMetaKeywords, local.newMetaKeywords);
-
-		if ( not FindNoCase(local.newMetaKeywords, local.newResponse) ) {
-			local.newResponse = ReplaceNoCase($.event('__MuraResponse__'), '<head>', '<head>' & local.newMetaKeywords);
-		}
-
-		$.event('__MuraResponse__', local.newResponse);
-
-		return arguments.debug ? local : true;
+		return arguments.debug ? local : ret;
 	}
 
 
 	// MISC.		******************************************************************
 
-	public void function setMetaDesc(required MetaDesc) {
-		var local = StructNew();
-
-		if ( Len(Trim(arguments.metaDesc)) ) {
-
-			variables.metaDesc = arguments.metaDesc;
-
-		} else {
-
-			local.str = '';
-
-			if ( Len(Trim($.content('metaDesc'))) ) {
-				local.str = $.content('metaDesc');
-			} else {
-
-				local.str = $.content('title') & ': ';
-				local.str = local.str & $.setDynamicContent($.content('body'));
-				local.str = $.getBean('utility').stripTags(local.str);
-				local.str = $.stripHTML(local.str);
-				setCustomSummary(str=local.str);
-				local.str = getCustomSummary();
-			}
-
-			local.str = esapiEncode('html', trim(local.str));
-			variables.metaDesc = local.str;
-		}
+	public any function getMetaDesc() {
+		return Len(Trim($.content('metaDesc'))) ? Trim($.content('metaDesc')) : getSummary();
 	}
 
-	public void function setMetaKeywords(
-		string metaKeywords=''
-		, string contentToParse=$.setDynamicContent($.content('body'))
-		, string metaKeywordsToIgnore=variables.pluginConfig.getSetting('metaKeywordsToIgnore')
+	public any function getMetaKeywords(
+		string contentToParse=$.setDynamicContent($.content('body'))
+		, string metaKeywordsToIgnore=$.getPlugin(variables.settings.pluginName).getSetting('metaKeywordsToIgnore')
 		, string delimiter=','
 	) {
-		var local = {};
-		if ( StructKeyExists(arguments, 'metaKeywords') and len(trim(arguments.metaKeywords)) ) {
-			variables.instance.metaKeywords = arguments.metaKeywords;
-		} else {
-			local.ret = '';
-			// if keywords already exists, use them
-			if ( len(trim($.content('metaKeywords'))) ) {
-				local.ret = HtmlEditFormat(trim($.content('metaKeywords')));			
-			} else {
-				if ( StructKeyExists(arguments, 'contentToParse') ) {
-					local.ret = stripTagContent(arguments.contentToParse);
-					local.ret = $.stripHTML(local.ret);
-					local.ret = $.content('title') & ' ' & local.ret;
-					local.ret = ReReplace(local.ret, "[;\\/:""*?<>|\!\+\-\=\.`\##\&_\(\)\[\]\%\^\$\@~\',\{\}]+", "", "ALL");
-					local.ret = ReReplace(local.ret, "[\s|\r\n?|\n]+", ",", "ALL");
-					local.ret = listDeleteDuplicates(local.ret);
-					if ( StructKeyExists(arguments, 'metaKeywordsToIgnore') ) {
-						local.ret = listDelete(arguments.metaKeywordsToIgnore, local.ret);
-					}
-					local.ret = HtmlEditFormat(lcase(trim(local.ret)));
-				}
+		var str = '';
+
+		if ( Len(Trim($.content('metaKeywords'))) ) {
+			return Trim($.content('metaKeywords'));
+		} 
+
+		if ( Len(arguments.contentToParse) ) {
+			str = $.getBean('utility').stripTags(arguments.contentToParse);
+			str = $.content('title') & ' ' & str;
+			str = Trim(ReReplace(str, '<[^>]*>', ' ', 'all'));
+			str = ReReplace(str, '\s{2,}', ' ', 'all');
+			str = ReReplace(str, '&[^;]+?;', '', 'all');
+			str = ReReplace(str, '[^a-zA-Z0-9_\-\s]', '', 'all');
+			str = listDeleteDuplicates(str);
+
+			if ( Len(arguments.metaKeywordsToIgnore) ) {
+				str = listDelete(strToRemove=arguments.metaKeywordsToIgnore, list=str, delimiter=arguments.delimiter);
 			}
-			variables.instance.metaKeywords = local.ret;
 		}
+
+		return Trim(str);
 	}
 
 
-	public void function setCustomSummary(
-		string customSummary=''
-		, string str=''
-		, numeric count=26
-	) {
-		var local = {};
-		if ( Len(trim(arguments.customSummary)) ) {
-			variables.customSummary = arguments.customSummary;
-		} else {
-			local.str = arguments.str;
-			local.count = val(arguments.count);
-			if ( len(trim(local.str)) ) {
-				local.str = $.stripHTML(local.str);
-				local.str = REReplace(local.str, "[\s|\r\n?|\n]+", " ", "ALL");
-				javaArray = CreateObject("java","java.util.Arrays");
-				wordArray = javaArray.copyOf(local.str.Split( " " ), local.count);
-				local.str = ArrayToList(wordArray, " ");
+	public any function getSummary(numeric numberOfWords=26) {
+		var wordCount = Val(arguments.numberOfWords);
+		var str = $.content('title') & ': ' & $.setDynamicContent($.content('body'));
+
+		if ( Len(Trim(str)) ) {
+			str = $.getBean('utility').stripTags(str);
+			str = Trim(ReReplace(str, '<[^>]*>', ' ', 'all'));
+			str = ReReplace(str, '\s{2,}', ' ', 'all');
+			str = ReReplace(str, '&[^;]+?;', '', 'all');
+			str = REReplace(str, '[\s|\r\n?|\n]+', ' ', 'all');
+
+			try {
+				var javaArray = CreateObject('java', 'java.util.Arrays');
+				var wordArray = javaArray.copyOf(str.Split(' '), wordCount);
+				str = ArrayToList(wordArray, ' ');
+			} catch(any e) {
+				// no access to java :(
+				var wordArray = ListToArray(str, ' ');
+				if ( ArrayLen(wordArray) > wordCount ) {
+					for ( var i=ArrayLen(wordArray); i > wordCount; i-- ) {
+						arrayDeleteAt(wordArray,i);
+					}
+				}
+				str = ArrayToList(wordArray, ' ');
 			}
-			variables.customSummary = trim(local.str);
 		}
+
+		return Trim(str);
 	}
 
 	public any function getAllValues() {
