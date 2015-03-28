@@ -26,15 +26,20 @@ component accessors=true extends='mura.plugin.pluginGenericEventHandler' output=
 		set$(arguments.$);
 	}
 
+	public any function onBeforeContentSave(required struct $) {
+		set$(arguments.$);
+
+		var newBean = arguments.$.event('newBean');
+		var oldBean = arguments.$.event('contentBean');
+
+		var error = '';
+		var errors = {};
+	}
+
 	public any function onRenderEnd(required struct $) {
 		set$(arguments.$);
 
 		doMeta();
-	}
-
-	public any function onContentEdit(required struct $) {
-		set$(arguments.$);
-		// update metaDesc & metaKeywords
 	}
 
 
@@ -58,34 +63,34 @@ component accessors=true extends='mura.plugin.pluginGenericEventHandler' output=
 
 	public any function listDeleteDuplicates(string list='', string delimiter=',', boolean debug=false) {
 		var i = 0;
-		var ret = '';
+		var newList = '';
 
 		if ( Len(arguments.list) ) {
 			var arr = ListToArray(arguments.list, arguments.delimiter);
 			for ( i=1; i <= ArrayLen(local.arr); i++ ) {
-				if ( !ListFindNoCase(ret, arr[i], arguments.delimiter) ) {
-					ret = ListAppend(ret, arr[i], arguments.delimiter);
+				if ( !ListFindNoCase(newList, arr[i], arguments.delimiter) ) {
+					newList = ListAppend(newList, arr[i], arguments.delimiter);
 				}
 			}
 		}
 
-		return arguments.debug ? local : ret;
+		return arguments.debug ? local : newList;
 	}
 
 	public any function listDelete(string strToRemove='', string list='', string delimiter=',', boolean debug=false) {
 		var i = 0;
-		var ret = '';
+		var newList = '';
 
 		if ( Len(arguments.strToRemove) && Len(arguments.list) ) {
 			var arr = ListToArray(arguments.list, arguments.delimiter);
 			for ( i=1; i <= ArrayLen(arr); i++ ) {
 				if ( !ListFindNoCase(arguments.strToRemove, arr[i], arguments.delimiter) ) {
-					ret = ListAppend(ret, arr[i], arguments.delimiter);
+					newList = ListAppend(newList, arr[i], arguments.delimiter);
 				}
 			}
 		}
 
-		return arguments.debug ? local : ret;
+		return arguments.debug ? local : newList;
 	}
 
 
@@ -95,34 +100,34 @@ component accessors=true extends='mura.plugin.pluginGenericEventHandler' output=
 		return Len(Trim($.content('metaDesc'))) ? Trim($.content('metaDesc')) : getSummary();
 	}
 
-	public any function getMetaKeywords(
-		string contentToParse=$.setDynamicContent($.content('body'))
-		, string metaKeywordsToIgnore=$.getPlugin(variables.settings.pluginName).getSetting('metaKeywordsToIgnore')
-		, string delimiter=','
-	) {
+	public any function getMetaKeywords() {;
 		var str = '';
 
 		if ( Len(Trim($.content('metaKeywords'))) ) {
 			return Trim($.content('metaKeywords'));
-		} 
+		}
 
-		if ( Len(arguments.contentToParse) ) {
-			str = $.getBean('utility').stripTags(arguments.contentToParse);
+		if ( Len($.setDynamicContent($.content('body'))) ) {
+			str = $.getBean('utility').stripTags($.setDynamicContent($.content('body')));
 			str = $.content('title') & ' ' & str;
 			str = Trim(ReReplace(str, '<[^>]*>', ' ', 'all'));
 			str = ReReplace(str, '\s{2,}', ' ', 'all');
 			str = ReReplace(str, '&[^;]+?;', '', 'all');
 			str = ReReplace(str, '[^a-zA-Z0-9_\-\s]', '', 'all');
+			str = ArrayToList(ListToArray(str, ' ')); // fix list
 			str = listDeleteDuplicates(str);
 
-			if ( Len(arguments.metaKeywordsToIgnore) ) {
-				str = listDelete(strToRemove=arguments.metaKeywordsToIgnore, list=str, delimiter=arguments.delimiter);
+			var ignore = $.getPlugin(variables.settings.pluginName).getSetting('metaKeywordsToIgnore');
+			if ( Len(ignore) ) {
+				str = listDelete(strToRemove=ignore, list=str);
 			}
 		}
 
+		// var cBean = $.getBean('content').loadBy(contentid=$.content('contentid'));
+		// cBean.setValue('metaKeywords', str).save();
+
 		return Trim(str);
 	}
-
 
 	public any function getSummary(numeric numberOfWords=26) {
 		var wordCount = Val(arguments.numberOfWords);
@@ -150,6 +155,9 @@ component accessors=true extends='mura.plugin.pluginGenericEventHandler' output=
 				str = ArrayToList(wordArray, ' ');
 			}
 		}
+
+		// var cBean = $.getBean('content').loadBy(contentid=$.content('contentid'));
+		// cBean.setValue('metaDesc', str).save();
 
 		return Trim(str);
 	}
